@@ -229,8 +229,9 @@ def CASA_simdata(
             inwidth = width
 
         if channels is None:
-            inchan = 2 * model.P.mol.nv + 1
-            channels = np.arrange(inchan)
+            inchan = 2 * model.P.mol.nv
+            channels = np.arange(inchan, dtype=int)
+            print(channels)
         else:
             if isinstance(channels, int):
                 inchan = 1
@@ -431,7 +432,7 @@ def _run_CASA(simu_name, node_dir=""):
 
     # cmd="/Applications/CASA.app/./Contents/Resources/python/regressions/admin/runcasa_from_shell.sh 0 "+simu_name+".py"
     cmd = "casa --nogui -c " + simu_name + ".py"
-    subprocess.call(cmd.split())
+    subprocess.call(cmd.split(), shell=True)
     os.chdir(homedir)
 
     # system, "mv "+workdir+"ALMA_disk.png  "+workdir+simu_name+".png" ;
@@ -466,4 +467,4 @@ def _CASA_clean(workdir):
         + workdir
         + "*.log*"
     )
-    subprocess.call(cmd.split())
+    subprocess.call(cmd.split(), shell=True)
