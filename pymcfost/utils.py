@@ -11,6 +11,24 @@ FWHM_to_sigma = 1.0 / sigma_to_FWHM
 arcsec = np.pi / 648000
 
 
+def spectral_convolution(model, Delta_v, n_window=101):
+    # Creating a Hanning function with n_window points
+    w = np.hanning(n_window)
+    # For each pixel, resampling the spectrum between -FWHM to FWHM
+    # then integrating over convolution window
+    v_new = model.velocity[iv] + np.linspace(-1, 1, n_window) * Delta_v
+    iv_min = int(iv - Delta_v / self.dv - 1)
+    iv_max = int(iv + Delta_v / self.dv + 2)
+
+    im = np.zeros([self.nx, self.ny])
+    for j in range(self.ny):
+        for i in range(self.nx):
+            f = interpolate.interp1d(self.velocity[iv_min:iv_max], cube[iv_min:iv_max, i, j]) 
+            im[i, j] = np.average(f(v_new))
+    return im
+
+
+
 def bin_image(im, n, func=np.sum):
     # bin an image in blocks of n x n pixels
     # return a image of size im.shape/n
